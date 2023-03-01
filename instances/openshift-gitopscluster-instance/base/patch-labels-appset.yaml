@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: patch-labels-argocd-clusters
+spec:
+  generators:
+  - clusters:
+      selector:
+        matchLabels:
+          apps.open-cluster-management.io/acm-cluster: "true"
+  template:
+    metadata:
+      name: 'patch-labels-{{name}}'
+    spec:
+      project: services
+      source:
+        repoURL: https://github.com/otp-itz/otp-gitops-services.git
+        path: instances/patch-labels-argocd-clusters
+        helm:
+          values: |
+            clusterName: {{ name }}
+      destination:
+        server: 'https://kubernetes.default.svc'
+        namespace: 'openshift-gitops'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: aap
+
+bases:
+  - ../../base
+
+patches:
+  - target:
+      kind: OperatorGroup
+      name: aap-operator-group
+    patch: |-
+      - op: replace
+        path: /spec/targetNamespaces
+        value: []
+patchesJson6902:
+  - target:
+      group: operators.coreos.com
+      version: v1alpha1
+      kind: Subscription
+      name: ansible-automation-platform-operator
+      namespace: aap
+    path: patch-channel.yaml

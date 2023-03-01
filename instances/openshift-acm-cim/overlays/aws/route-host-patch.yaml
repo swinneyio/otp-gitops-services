@@ -1,0 +1,22 @@
+# Requires Red Hat COP Patch operator
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: Patch
+metadata:
+  name: patch-assisted-image-service-route-host
+  namespace: multicluster-engine
+spec:
+  serviceAccountRef:
+    name: patch-operator
+  patches:
+    patch-assisted-image-service-route-host:
+      targetObjectRef:
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        name: assisted-image-service
+      patchTemplate: '[{"op": "replace", "path": "/spec/host", "value":"https://assisted-image-service-multicluster-engine.{{ (index . 1).spec.domain }}"}]'     
+      patchType: application/json-patch+json
+      sourceObjectRefs:
+      - apiVersion: operator.openshift.io/v1
+        kind: IngressController
+        name: ingress-controller-with-nlb
+        namespace: openshift-ingress-operator

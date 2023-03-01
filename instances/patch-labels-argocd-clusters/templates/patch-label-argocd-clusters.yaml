@@ -1,0 +1,32 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: patch-secret-{{ .Values.clusterName | lower }}
+  namespace: openshift-gitops
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      serviceAccountName: openshift-gitops-otp-argocd-application-controller
+      template:
+        spec:
+          containers:
+          - name: patch-secret-{{ .Values.clusterName | lower }}
+            image: quay.io/openshift/origin-cli:v3.11
+            command: ["/bin/bash"]
+            args:
+            - -c
+            - |-
+              export platform=$(oc get clusterdeployments.hive.openshift.io {{ .Values.clusterName }} -n {{ .Values.clusterName }} -o=jsonpath='{.metadata.labels.hive\.openshift\.io/cluster-platform}')
+              export majorVersion=$(oc get clusterdeployments.hive.openshift.io {{ .Values.clusterName }} -n {{ .Values.clusterName }} -o=jsonpath='{.metadata.labels.hive\.openshift\.io/version-major}')
+              export majorMinorVersion=$(oc get clusterdeployments.hive.openshift.io {{ .Values.clusterName }} -n {{ .Values.clusterName }} -o=jsonpath='{.metadata.labels.hive\.openshift\.io/version-major-minor}')
+
+              echo $platform
+              echo $majorVersion
+              echo $majorMinorVersion
+
+              oc patch secret {{ .Values.clusterName }}-cluster-secret -n openshift-gitops -p '{"metadata": {"labels": {"hive.openshift.io/cluster-platform": "'${platform}'"} } }'
+              oc patch secret {{ .Values.clusterName }}-cluster-secret -n openshift-gitops -p '{"metadata": {"labels": {"hive.openshift.io/version-major": "'${majorVersion}'"} } }'
+              oc patch secret {{ .Values.clusterName }}-cluster-secret -n openshift-gitops -p '{"metadata": {"labels": {"hive.openshift.io/version-major-minor": "'${majorMinorVersion}'"} } }'
+          restartPolicy: OnFailure

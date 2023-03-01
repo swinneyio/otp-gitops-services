@@ -1,0 +1,25 @@
+apiVersion: hco.kubevirt.io/v1beta1
+kind: HyperConverged
+metadata:
+  annotations:
+    deployOVS: "false"
+    argocd.argoproj.io/sync-wave: "252"
+    helm.sh/hook-weight: "252"
+  labels:
+    app: kubevirt-hyperconverged
+  name: kubevirt-hyperconverged
+  namespace: openshift-cnv
+spec:
+  certConfig:
+    ca:
+      duration: 48h0m0s
+      renewBefore: 24h0m0s
+    server:
+      duration: 24h0m0s
+      renewBefore: 12h0m0s
+  featureGates:
+    enableCommonBootImageImport: true
+    sriovLiveMigration: false
+    withHostPassthroughCPU: false
+  infra: {}
+  workloads: {}

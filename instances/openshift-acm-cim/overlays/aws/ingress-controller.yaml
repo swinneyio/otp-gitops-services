@@ -1,0 +1,19 @@
+apiVersion: operator.openshift.io/v1
+kind: IngressController
+metadata:
+  name: ingress-controller-with-nlb
+  namespace: openshift-ingress-operator
+spec:
+  # Replace "activation-assets.com" with your base domain
+  domain: nlb-apps.activation-assets.com
+  routeSelector:
+      matchLabels:
+        router-type: nlb
+  endpointPublishingStrategy:
+    type: LoadBalancerService
+    loadBalancer:
+      scope: External
+      providerParameters:
+        type: AWS
+        aws:
+          type: NLB

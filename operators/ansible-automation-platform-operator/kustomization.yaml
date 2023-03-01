@@ -1,0 +1,17 @@
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+
+bases:
+  - overlays/stable-2.3-cluster-scoped
+
+patches:
+-  target:
+     kind: Subscription
+     name: ansible-automation-platform-operator
+   patch: |-
+    - op: replace
+      path: /metadata/namespace
+      value: 'aap'
+    - op: add
+      path: /spec/installPlanApproval
+      value: Automatic

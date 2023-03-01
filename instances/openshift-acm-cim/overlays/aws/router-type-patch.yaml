@@ -1,0 +1,20 @@
+# Requires Red Hat COP Patch operator
+apiVersion: redhatcop.redhat.io/v1alpha1
+kind: Patch
+metadata:
+  name: patch-assisted-image-service-route-router-type
+  namespace: multicluster-engine
+spec:
+  serviceAccountRef:
+    name: patch-operator
+  patches:
+    patch-assisted-image-service-route-router-type:
+      targetObjectRef:
+        apiVersion: route.openshift.io/v1
+        kind: Route
+        name: assisted-image-service
+      patchTemplate: |
+        metadata: 
+          labels:
+            route-type: nlb
+      patchType: application/strategic-merge-patch+json

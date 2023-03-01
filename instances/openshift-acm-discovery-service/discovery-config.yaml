@@ -1,0 +1,10 @@
+apiVersion: discovery.open-cluster-management.io/v1
+kind: DiscoveryConfig
+metadata:
+  name: discovery
+  namespace: rhacm-credentials
+spec:
+  # Must match the RHACM Credential you configured for Red Hat OpenShift Cluster Manager
+  credential: rhocm-test
+  filters:
+    lastActive: 7

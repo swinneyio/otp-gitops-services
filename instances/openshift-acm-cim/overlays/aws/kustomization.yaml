@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+patchesStrategicMerge:
+  - central-infrastructure-management.yaml
+
+resources:
+  - ../../base
+  - ingress-controller.yaml
+  - route-host-patch.yaml
+  - router-type-patch.yaml
+  - crb.yaml

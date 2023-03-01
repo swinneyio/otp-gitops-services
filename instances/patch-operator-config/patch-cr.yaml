@@ -1,0 +1,71 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: patcher-cr
+rules:
+- apiGroups:
+  - "route.openshift.io"
+  resources:
+  - routes
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - "console.openshift.io"
+  resources:
+  - consolelinks
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - "operator.openshift.io"
+  resources:
+  - IngressController
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - "operator.openshift.io"
+  resources:
+  - IngressController
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+- apiGroups:
+  - "argoproj.io"
+  verbs:
+  - CREATE
+  - get
+  - list
+  - watch
+  - patch
+  resources:
+  - applications
+- apiGroups:
+  - "hive.openshift.io"
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
+  resources:
+  - clusterclaims
+  - clusterdeployments
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - patch
